@@ -1,0 +1,74 @@
+{% extends "layouts/module_admin.html" %}
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="HisenseTv">HisenseTv</a></li>
+{% endblock %}
+{% block module %}
+
+
+<ul class="nav nav-tabs mb-3" id="configTabs" role="tablist">
+    <li class="nav-item"><a class="nav-link tab-button active" href="#general" data-bs-toggle="tab" role="tab">General</a></li>
+    <li class="nav-item"><a class="nav-link tab-button" href="#data" data-bs-toggle="tab" role="tab">Data</a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+        {% if form.errors %}
+        <ul>
+        {% for field, errors in form.errors.items() %}
+            {% for error in errors %}
+                <li>{{field}}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <h2>{{form.title.data}}</h2>
+    
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+        </div>
+        <div>
+            {{ form.ip.label(class="form-label") }}
+            {{ form.ip(class="form-control") }}
+        </div>
+        <div>
+            {{ form.mac.label(class="form-label") }}
+            {{ form.mac(class="form-control") }}
+        </div>
+        <button type="submit" name="form_submit" class="btn btn-primary">Submit</button>
+        <a href="HisenseTv" class="btn btn-secondary">Cancel</a>
+    </form>
+    </div>
+    <div class="tab-pane fade {% if tab == 'properties'%}show active{%endif%}" id="data" role="tabpanel" aria-labelledby="data-tab">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Value</th>
+                <th scope="col">Updated</th>
+                <th scope="col">Link</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in data %}
+              <tr>
+                <th scope="row">{{item.title}}</th>
+                <td>{{item.value}}</td>
+                <td>{{item.updated}}</td>
+                <td>{% if item.linked_object%}{{item.linked_object}}.{{item.linked_property}}{%endif%}</td>
+                <td>
+                    <div>
+                        <a href="?op=edit_link&data={{item.id}}" class="btn btn-secondary" title="Edit"><i class="feather icon-edit"></i></a>
+                        <a href="?op=delete&data={{item.id}}" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-danger" title="Delete"><i class="feather icon-trash"></i></a>
+                    </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+{% endblock %}

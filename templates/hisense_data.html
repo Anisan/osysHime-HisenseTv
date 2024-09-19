@@ -1,0 +1,17 @@
+{% extends "layouts/module_admin.html" %}
+{% from "macros/select.html" import render_linked_select %}
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="HisenseTv">HisenseTv</a></li>
+{% endblock %}
+{% block module %}
+
+<h2>{{form.title.data}}</h2>
+    
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ render_linked_select(form.linked_object, form.linked_property, None) }}
+    <button type="submit" name="form_submit" class="btn btn-primary">Submit</button>
+    <a href="HisenseTv" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}
