@@ -18,9 +18,9 @@ class HisenseTv(BasePlugin):
 
     def __init__(self,app):
         super().__init__(app,__name__)
-        self.title = "HisenseTV"
+        self.title = "HisenseTv"
         self.version = 1
-        self.description = """Hisense TV"""
+        self.description = """Control for Hisense TV"""
         self.category = "Devices"
         self.actions = ['cycle']
         self._clients = {}
@@ -30,7 +30,7 @@ class HisenseTv(BasePlugin):
     def initialization(self):
         devices = self.session.query(Device).all()
         for device in devices:
-            client = self.createClient()
+            client = self.createClient("osysHome_dev"+str(device.id))
             if client:
                 self._clients[device.ip] = client
 
@@ -90,8 +90,8 @@ class HisenseTv(BasePlugin):
         data = self.session.query(Data).where(Data.linked_object == obj, Data.linked_property == prop).all()
         for item in data:
             if item.value != val:
-                name = "1q2w3e4r5t6y"
                 device = self.session.query(Device).where(Device.id == item.device_id).one_or_none()
+                name = "osysHome_dev"+str(device.id)
                 if item.title == 'state':
                     if val == 1:
                         self.wake_on_lan("192.168.0.255", device.mac)
@@ -128,8 +128,8 @@ class HisenseTv(BasePlugin):
                     #todo set source
                     pass
 
-    def createClient(self):
-        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id='1q2w3e4r5t6y')
+    def createClient(self, client_id):
+        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id=client_id)
         # Назначаем функции обратного вызова
         client.on_connect = self.on_connect
         client.on_disconnect = self.on_disconnect
